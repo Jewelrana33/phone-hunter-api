@@ -13,9 +13,9 @@ const displayPhones = phones =>{
     phones.forEach(phone =>{
         console.log(phone);
         const phoneCard = document.createElement('div');
-        phoneCard.classList = `card w-96 bg-gray-100 shadow-xl p-8`;
+        phoneCard.classList = `card bg-gray-100 shadow-xl p-8`;
         phoneCard.innerHTML = `
-        <figure><img src="${phone.image}" alt="Shoes" /></figure>
+        <figure><img src="${phone.image}" alt="phone" /></figure>
         <div class="card-body">
           <h2 class="card-title">${phone.phone_name}</h2>
           <p>If a dog chews shoes whose shoes does he choose?</p>
