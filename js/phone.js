@@ -1,14 +1,15 @@
-const loadPhone = async (searchText) =>{
+const loadPhone = async (searchText, isShowAll) =>{
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json();
-    displayPhones(data.data);
+    const phones = data.data;
+    displayPhones(phones, isShowAll);
 }
 
 
 // loadPhone();
 
 
-const displayPhones = phones =>{
+const displayPhones = (phones, isShowAll)=>{
     
     const phoneContainer = document.getElementById('phone-container');
 
@@ -18,15 +19,17 @@ const displayPhones = phones =>{
     // display show all button if there are more than 12 phones
     const showAllButton = document.getElementById('show-all-button');
 
-    if(phones.length > 12){
+    if(phones.length > 12 && !isShowAll){
       showAllButton.classList.remove('hidden');
     }
     else{
       showAllButton.classList.add('hidden');
     }
-
-  // Display only first 12 phones
-    phones = phones.slice(0,5);
+    console.log('is show all',isShowAll);
+  // Display only first 12 phones if not show all
+    if(!isShowAll){
+      phones = phones.slice(0,5);
+    }
 
     phones.forEach(phone =>{
         console.log(phone);
@@ -38,7 +41,7 @@ const displayPhones = phones =>{
           <h2 class="card-title">${phone.phone_name}</h2>
           <p>If a dog chews shoes whose shoes does he choose?</p>
           <div class="card-actions justify-end">
-            <button class="btn btn-primary">Buy Now</button>
+            <button onclick="handleShowDetails('${phone.slug}')" class="btn btn-primary">Show Details</button>
           </div>
         </div>
       </div>`
@@ -48,13 +51,22 @@ const displayPhones = phones =>{
     toggleLoadingSpinner(false);
 }
 
+const handleShowDetails = async (id) =>{
+  console.log(id);
+  // load single phone data 
+  const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`);
+  const data = await res.json();
+  console.log(data);
+
+}
+
 // handle search button
-const handleSearch = () => {
+const handleSearch = (isShowAll) => {
   toggleLoadingSpinner(true);
   const searchField = document.getElementById('search-field');
   const searchText = searchField.value;
   console.log(searchText);
-  loadPhone(searchText);
+  loadPhone(searchText, isShowAll);
 }
 
 const toggleLoadingSpinner = (isLoading) => {
@@ -65,5 +77,10 @@ const toggleLoadingSpinner = (isLoading) => {
   else{
     loadingSpinner.classList.add('hidden');
   }
-  
 }
+
+// handle show all 
+const handleShowAll = () =>{
+  handleSearch(true);
+}
+
